@@ -3,7 +3,6 @@ require "http/client"
 require "xml"
 require "openssl"
 require "openssl/lib_crypto"
-require "progress"
 
 module Automaintainer
   @@configFilePath = "./data/config.yaml"
@@ -128,20 +127,11 @@ module Automaintainer
         # See https://twitter.com/DenysVitali/status/826878809240645632
         client.get(path) do |response|
           content_length = response.headers["Content-Length"].to_i
-          index = 0
-          progress_bar = ProgressBar.new
-          progress_bar.total = content_length/4096
-          progress_bar.width = 60
 
           File.open(fPath, "wb") do |file|
             if response.body_io?
               response.body_io.each_byte do |byte|
                 file.write_byte(byte)
-                if index == 4096
-                  index = 0
-                  progress_bar.inc
-                end
-                index = index + 1
               end
             end
           end

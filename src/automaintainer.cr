@@ -13,7 +13,7 @@ module Automaintainer
   @@nextV = "https://aus5.mozilla.org/update/6/Firefox/%VERSION%/%BUILDID%/Linux_x86_64-gcc3/en-US/aurora/Linux/NA/default/default/update.xml?force=1"
   @@downloadURL = "https://download-installer.cdn.mozilla.net/pub/firefox/nightly/latest-mozilla-aurora/firefox-%VERSION%.en-US.linux-%ARCH%.tar.bz2"
   @@arch = ["i686", "x86_64"]
-  @@debug = true
+  @@debug = false
 
   def self.run
     config = loadConfig()
@@ -146,7 +146,7 @@ module Automaintainer
         end
       end
       sha512 = OpenSSL::SHA512.hash(File.read(fPath)).to_slice.hexstring
-      # File.delete(fPath)
+      File.delete(fPath)
       puts "#{arch}: #{sha512}"
 
       regexp = Regex.new("sha512sums_#{arch}=\\('(.*?)'")

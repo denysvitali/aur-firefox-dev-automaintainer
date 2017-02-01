@@ -13,7 +13,7 @@ For better performances, build it with `crystal build src/automaintainer.cr --re
 
 ## Contributing
 
-1. Fork it ( https://github.com/denysvitali/automaintainer/fork )
+1. Fork it ( https://github.com/denysvitali/aur-firefox-dev-automaintainer/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)

@@ -66,7 +66,7 @@ module Automaintainer
   end
 
   def self.loadConfig : (ConfigFile | Nil)
-    filePath = File.expand(@@configFilePath)
+    filePath = File.expand_path(@@configFilePath)
     fileDir = File.basename(filePath)
 
     if !Dir.exists?(fileDir)
@@ -97,7 +97,7 @@ module Automaintainer
   end
 
   def self.writeConfig(cf : ConfigFile)
-    filePath = File.expand(@@configFilePath)
+    filePath = File.expand_path(@@configFilePath)
     File.write(filePath, cf.to_yaml)
   end
 

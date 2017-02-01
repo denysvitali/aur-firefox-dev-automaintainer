@@ -8,6 +8,9 @@ targets:
   automaintainer:
     main: src/automaintainer.cr
 
-crystal: 0.20.5
+dependencies:
+  progress:
+    github: askn/progress
 
+crystal: 0.20.5
 license: MIT

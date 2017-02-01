@@ -67,7 +67,7 @@ module Automaintainer
 
   def self.loadConfig : (ConfigFile | Nil)
     filePath = File.expand_path(@@configFilePath)
-    fileDir = File.basename(filePath)
+    fileDir = File.dirname(filePath)
 
     if !Dir.exists?(fileDir)
       Dir.mkdir_p(fileDir)

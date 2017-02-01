@@ -6,7 +6,7 @@ require "openssl/lib_crypto"
 require "progress"
 
 module Automaintainer
-  @@configFilePath = "data/config.yaml"
+  @@configFilePath = "./data/config.yaml"
   @@originalPKGBUILD = "~/ffdev-aur/PKGBUILD"
   @@startingBID = "20170123004004"
   @@startingVersion = "53.0a2"
@@ -66,7 +66,8 @@ module Automaintainer
   end
 
   def self.loadConfig : (ConfigFile | Nil)
-    fileDir = File.basename(@@configFilePath)
+    filePath = File.expand(@@configFilePath)
+    fileDir = File.basename(filePath)
 
     if !Dir.exists?(fileDir)
       Dir.mkdir_p(fileDir)
@@ -79,7 +80,7 @@ module Automaintainer
 
     cf = nil
     begin
-      cf = ConfigFile.from_yaml(File.read(@@configFilePath))
+      cf = ConfigFile.from_yaml(File.read(filePath))
     rescue ex
       puts "Unable to parse config - replacing with a new one"
       cf = self.createConfig
@@ -96,7 +97,8 @@ module Automaintainer
   end
 
   def self.writeConfig(cf : ConfigFile)
-    File.write(@@configFilePath, cf.to_yaml)
+    filePath = File.expand(@@configFilePath)
+    File.write(filePath, cf.to_yaml)
   end
 
   def self.updatePKGBUILD(version, bid)

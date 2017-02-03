@@ -46,11 +46,11 @@ module Automaintainer
             self.writeConfig(config)
           end
 
-          if updEl["appVersion"] =~ /[A-Za-z\.0-9]/
+          if updEl["appVersion"] =~ /^[A-Za-z\.0-9]+$/ && updEl["buildID"] =~/^[0-9]+$/
             stdout = IO::Memory.new
             stderr = IO::Memory.new
             result = Process.run(
-              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && makepkg --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}' && git push origin master",
+              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && makepkg --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["buildID"]}' && git push origin master",
               nil, nil, false, true, false, stdout, stderr
             )
             puts "Output: #{stdout.to_s}"
@@ -144,7 +144,7 @@ module Automaintainer
       regexp = Regex.new("sha512sums_#{arch}=\\('(.*?)'")
       pkgbuild = pkgbuild.gsub(regexp, "sha512sums_#{arch}=('#{sha512}'")
     end
-    pkgbuild = pkgbuild.gsub(/^pkgver=(.*?)$/m, "pkgver=#{version}")
+    pkgbuild = pkgbuild.gsub(/^pkgver=(.*?)$/m, "pkgver=#{version}_#{bid}")
     pkgbuild = pkgbuild.gsub(/^# Next version:.*?$/m, "# Next version: #{version}")
     pkgbuild = pkgbuild.gsub(/^# Current BID:.*?$/m, "# Current BID: #{bid}")
     File.write("PKGBUILD", pkgbuild)

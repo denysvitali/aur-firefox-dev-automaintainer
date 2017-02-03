@@ -115,8 +115,6 @@ module Automaintainer
       fPath = "/tmp/ff-#{arch}"
 
       if @@debug == false
-        # response = HTTP::Client.get url
-
         uri = URI.parse url
         host = ""
         host = uri.host.to_s
@@ -145,6 +143,8 @@ module Automaintainer
       pkgbuild = pkgbuild.gsub(regexp, "sha512sums_#{arch}=('#{sha512}'")
     end
     pkgbuild = pkgbuild.gsub(/^pkgver=(.*?)$/m, "pkgver=#{version}_#{bid}")
+    pkgbuild = pkgbuild.gsub(/^_ffver=(.*?)$/m, "_ffver=#{version}")
+    pkgbuild = pkgbuild.gsub(/^_ffbid=(.*?)$/m, "_ffbid=#{bid}")
     pkgbuild = pkgbuild.gsub(/^# Next version:.*?$/m, "# Next version: #{version}")
     pkgbuild = pkgbuild.gsub(/^# Current BID:.*?$/m, "# Current BID: #{bid}")
     File.write("PKGBUILD", pkgbuild)

@@ -50,7 +50,11 @@ module Automaintainer
             stdout = IO::Memory.new
             stderr = IO::Memory.new
             result = Process.run(
+<<<<<<< HEAD
               "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && makepkg --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["buildID"]}' && git push origin master",
+=======
+              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && makepkg --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["appVersion"]}' && git push origin master",
+>>>>>>> fix-1
               nil, nil, false, true, false, stdout, stderr
             )
             puts "Output: #{stdout.to_s}"
@@ -115,8 +119,6 @@ module Automaintainer
       fPath = "/tmp/ff-#{arch}"
 
       if @@debug == false
-        # response = HTTP::Client.get url
-
         uri = URI.parse url
         host = ""
         host = uri.host.to_s
@@ -145,6 +147,11 @@ module Automaintainer
       pkgbuild = pkgbuild.gsub(regexp, "sha512sums_#{arch}=('#{sha512}'")
     end
     pkgbuild = pkgbuild.gsub(/^pkgver=(.*?)$/m, "pkgver=#{version}_#{bid}")
+<<<<<<< HEAD
+=======
+    pkgbuild = pkgbuild.gsub(/^_ffver=(.*?)$/m, "_ffver=#{version}")
+    pkgbuild = pkgbuild.gsub(/^_ffbid=(.*?)$/m, "_ffbid=#{bid}")
+>>>>>>> fix-1
     pkgbuild = pkgbuild.gsub(/^# Next version:.*?$/m, "# Next version: #{version}")
     pkgbuild = pkgbuild.gsub(/^# Current BID:.*?$/m, "# Current BID: #{bid}")
     File.write("PKGBUILD", pkgbuild)

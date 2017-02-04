@@ -7,6 +7,7 @@ require "openssl/lib_crypto"
 module Automaintainer
   @@configFilePath = "./data/config.yaml"
   @@originalPKGBUILD = "~/ffdev-aur/PKGBUILD"
+  @@makepkg = "/usr/local/bin/makepkg"
   @@startingBID = "20170123004004"
   @@startingVersion = "53.0a2"
   @@nextV = "https://aus5.mozilla.org/update/6/Firefox/%VERSION%/%BUILDID%/Linux_x86_64-gcc3/en-US/aurora/Linux/NA/default/default/update.xml?force=1"
@@ -50,7 +51,7 @@ module Automaintainer
             stdout = IO::Memory.new
             stderr = IO::Memory.new
             result = Process.run(
-              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && makepkg --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["buildID"]}' && git push origin master",
+              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && #{@@makepkg} --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["buildID"]}' && git push origin master",
               nil, nil, false, true, false, stdout, stderr
             )
             puts "Output: #{stdout.to_s}"

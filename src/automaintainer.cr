@@ -108,41 +108,6 @@ module Automaintainer
       exit
     end
 
-    shaSums = {} of String => String
-
-    @@arch.each do |arch|
-      url = @@downloadURL.gsub(/%VERSION%/, version)
-      url = url.gsub(/%ARCH%/, arch)
-      fPath = "/tmp/ff-#{arch}"
-
-      if @@debug == false
-        uri = URI.parse url
-        host = ""
-        host = uri.host.to_s
-        path = uri.path.to_s
-
-        client = HTTP::Client.new(host)
-        client.compress = false # WTF Mozilla Servers?
-        # See https://twitter.com/DenysVitali/status/826878809240645632
-        client.get(path) do |response|
-          content_length = response.headers["Content-Length"].to_i
-
-          File.open(fPath, "wb") do |file|
-            if response.body_io?
-              response.body_io.each_byte do |byte|
-                file.write_byte(byte)
-              end
-            end
-          end
-        end
-      end
-      sha512 = OpenSSL::SHA512.hash(File.read(fPath)).to_slice.hexstring
-      File.delete(fPath)
-      puts "#{arch}: #{sha512}"
-
-      regexp = Regex.new("sha512sums_#{arch}=\\('(.*?)'")
-      pkgbuild = pkgbuild.gsub(regexp, "sha512sums_#{arch}=('#{sha512}'")
-    end
     pkgbuild = pkgbuild.gsub(/^pkgver=(.*?)$/m, "pkgver=#{version}_#{bid}")
     pkgbuild = pkgbuild.gsub(/^_ffver=(.*?)$/m, "_ffver=#{version}")
     pkgbuild = pkgbuild.gsub(/^_ffbid=(.*?)$/m, "_ffbid=#{bid}")
@@ -152,21 +117,4 @@ module Automaintainer
   end
 
   self.run
-end
-
-class OpenSSL::SHA512
-  # Crystal doesn't have SHA512 (before d45fbff38f7cf08ec98d393f610be28139caa81e)
-  def self.hash(data : String) : UInt8[64]
-    hash(data.to_unsafe, LibC::SizeT.new(data.bytesize))
-  end
-
-  def self.hash(data : UInt8*, bytesize : LibC::SizeT) : UInt8[64]
-    buffer = uninitialized UInt8[64]
-    LibCrypto.sha512(data, bytesize, buffer)
-    buffer
-  end
-end
-
-lib LibCrypto
-  fun sha512 = SHA512(data : Char*, length : SizeT, md : Char*) : Char*
 end

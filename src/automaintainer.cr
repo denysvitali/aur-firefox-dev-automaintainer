@@ -8,10 +8,9 @@ module Automaintainer
   @@configFilePath = "./data/config.yaml"
   @@originalPKGBUILD = "~/ffdev-aur/PKGBUILD"
   @@makepkg = "/usr/local/bin/makepkg"
-  @@startingBID = "20170123004004"
-  @@startingVersion = "53.0a2"
+  @@startingBID = "20170613150320"
+  @@startingVersion = "55.0a1"
   @@nextV = "https://aus5.mozilla.org/update/6/Firefox/%VERSION%/%BUILDID%/Linux_x86_64-gcc3/en-US/aurora/Linux/NA/default/default/update.xml?force=1"
-  @@downloadURL = "https://download-installer.cdn.mozilla.net/pub/firefox/nightly/latest-mozilla-aurora/firefox-%VERSION%.en-US.linux-%ARCH%.tar.bz2"
   @@arch = ["i686", "x86_64"]
   @@debug = false
 

@@ -75,7 +75,7 @@ module Automaintainer
             stderr = IO::Memory.new
 
             result = Process.run(
-              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && #{@@makepkg} --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["buildID"]}' && git push origin master",
+              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && #{@@makepkg} --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{newVer}, BID: #{updEl["buildID"]}' && git push origin master",
               nil, nil, false, true, false, stdout, stderr
             )
             puts "Output: #{stdout.to_s}"

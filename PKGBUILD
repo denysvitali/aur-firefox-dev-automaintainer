@@ -7,12 +7,12 @@ _codename=date
 pkgname="${_name}-dev"
 pkgdesc='Mozilla Firefox Developer Edition'
 url='http://www.mozilla.org/firefox/developer'
-pkgver=55.0b1_20170614150218
+pkgver=55.0b1_20170613054006
 _ffver=55.0b1
-_ffbid=20170614150218
+_ffbid=20170613054006
 locale="en-US"
-# Next version: 56.0a1
-# Current BID: 20170614150218
+# Next version: 55.0b1
+# Current BID: 20170613054006
 year=${_ffbid:0:4}
 month=${_ffbid:4:2}
 day=${_ffbid:6:2}
@@ -47,7 +47,6 @@ package() {
   ln -s /opt/firefox-$_channel/firefox $pkgdir/usr/bin/firefox-$_channel
   install -m644 $srcdir/firefox-$_channel.desktop $pkgdir/usr/share/applications/
   install -m644 $srcdir/firefox/browser/icons/mozicon128.png $pkgdir/usr/share/pixmaps/$pkgname-icon.png
-  ls
   install -Dm644 $srcdir/vendor.js $pkgdir/opt/firefox-$_channel/browser/defaults/preferences/vendor.js
 
   # Use system-provided dictionaries

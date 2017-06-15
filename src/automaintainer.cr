@@ -38,8 +38,32 @@ module Automaintainer
         updEl = elements[0]
         if updEl["appVersion"] != version || updEl["buildID"] != buildId
           # New version
-          puts "New version! #{updEl["appVersion"]} - #{updEl["buildID"]}"
-          self.updatePKGBUILD(updEl["appVersion"], updEl["buildID"])
+          updC = updEl.children.select(&.element?)
+          node = updC[0]
+          newVer = nil
+          if node
+            dlurl = URI.parse(node["URL"])
+            query = dlurl.query
+            if query
+              query.split("&") do |val|
+                arr = val.split("=")
+                if arr[0] == "product"
+                  dirtyVer = arr[1]
+                  match = dirtyVer.match /devedition-(\d+\.\d+[a-z]\d+)-complete/
+                  if match
+                    newVer = match[1]
+                  end
+                end
+              end
+            end
+          end
+
+          if !newVer
+            newVer = updEl["appVersion"]
+          end
+
+          puts "New version! #{newVer} - #{updEl["buildID"]}"
+          self.updatePKGBUILD(newVer, updEl["buildID"])
           if config
             config.version = updEl["appVersion"]
             config.buildId = updEl["buildID"]
@@ -49,13 +73,14 @@ module Automaintainer
           if updEl["appVersion"] =~ /^[A-Za-z\.0-9]+$/ && updEl["buildID"] =~/^[0-9]+$/
             stdout = IO::Memory.new
             stderr = IO::Memory.new
-            result = Process.run(
-              "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && #{@@makepkg} --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["buildID"]}' && git push origin master",
-              nil, nil, false, true, false, stdout, stderr
-            )
+
+            #result = Process.run(
+            #  "cp PKGBUILD ~/ffdev-aur/ && cd ~/ffdev-aur/ && #{@@makepkg} --printsrcinfo > .SRCINFO && git add PKGBUILD .SRCINFO && git commit -m 'Bump to version #{updEl["appVersion"]}, BID: #{updEl["buildID"]}' && git push origin master",
+            #  nil, nil, false, true, false, stdout, stderr
+            #)
             puts "Output: #{stdout.to_s}"
             puts "Error: #{stderr.to_s}"
-            puts "Success: #{result.success?}"
+            #puts "Success: #{result.success?}"
           else
             puts "Doesn't match"
           end
